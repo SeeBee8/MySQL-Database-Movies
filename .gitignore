@@ -152,3 +152,4 @@ cython_debug/
 #.idea/
 *.tsv
 Project 3 Part 1.ipynb
+*.gz
