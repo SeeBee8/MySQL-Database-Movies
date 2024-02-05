@@ -153,3 +153,4 @@ cython_debug/
 *.tsv
 Project 3 Part 1.ipynb
 *.gz
+*.png
