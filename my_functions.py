@@ -1,8 +1,59 @@
+### MAKE TEXT VECTORIZATION LAYER
+
+
+from pprint import pprint
+import numpy as np
+import matplotlib.pyplot as plt
+
+def make_text_vectorization_layer(train_ds,  max_tokens=None, 
+                                  split='whitespace',
+                                  standardize="lower_and_strip_punctuation",
+                                  output_mode="int",
+                                  output_sequence_length=None,
+                                  ngrams=None, pad_to_max_tokens=False,
+                                  verbose=True,
+                                  **kwargs,
+                                 ):
+    # Build the text vectorization layer
+    text_vectorizer = tf.keras.layers.TextVectorization(
+        max_tokens=max_tokens,
+        standardize=standardize, 
+        output_mode=output_mode,
+        output_sequence_length=output_sequence_length,
+        **kwargs
+    )
+    # Get just the text from the training data
+    if isinstance(train_ds, (np.ndarray, list, tuple, pd.Series)):
+        ds_texts = train_ds
+    else:
+        try:
+            ds_texts = train_ds.map(lambda x, y: x )
+        except:
+            ds_texts = train_ds
+            
+    # Fit the layer on the training texts
+    text_vectorizer.adapt(ds_texts)
+    
+    
+    if verbose:
+        # Print the params
+        print( "\ntf.keras.layers.TextVectorization(" )
+        config = text_vectorizer.get_config()
+        pprint(config,indent=4)
+        print(")")
+               
+    # SAVING VOCAB FOR LATER
+    # Getting list of vocab 
+    vocab = text_vectorizer.get_vocabulary()
+    # Save dictionaries to look up words from ints 
+    int_to_str  = {idx:word for idx, word in enumerate(vocab)}
+    
+    return text_vectorizer, int_to_str
+
+
 ### CLASSIFICATION METRICS
 
 from sklearn.metrics import classification_report, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
-import numpy as np
 def classification_metrics(y_true, y_pred, label='',
                            output_dict=False, figsize=(8,4),
                            normalize='true', cmap='Blues',
@@ -50,8 +101,33 @@ def classification_metrics(y_true, y_pred, label='',
         report_dict = classification_report(y_true, y_pred, output_dict=True)
         return report_dict
 
+### EVALUATE CLASSIFICATION
 
-### Evaluate Classification Networks
+def evaluate_classification(model, X_train, y_train, X_test, y_test,
+                         figsize=(6,4), normalize='true', output_dict = False,
+                            cmap_train='Blues', cmap_test="Reds",colorbar=False):
+  # Get predictions for training data
+  y_train_pred = model.predict(X_train)
+  # Call the helper function to obtain regression metrics for training data
+  results_train = classification_metrics(y_train, y_train_pred, #verbose = verbose,
+                                     output_dict=True, figsize=figsize,
+                                         colorbar=colorbar, cmap=cmap_train,
+                                     label='Training Data')
+  print()
+  # Get predictions for test data
+  y_test_pred = model.predict(X_test)
+  # Call the helper function to obtain regression metrics for test data
+  results_test = classification_metrics(y_test, y_test_pred, #verbose = verbose,
+                                  output_dict=True,figsize=figsize,
+                                         colorbar=colorbar, cmap=cmap_test,
+                                    label='Test Data' )
+  if output_dict == True:
+    # Store results in a dataframe if ouput_frame is True
+    results_dict = {'train':results_train,
+                    'test': results_test}
+    return results_dict
+
+### EVALUATE CLASSIFICATION NETWORK
 
 def evaluate_classification_network(model, 
                                     X_train=None, y_train=None, 
@@ -145,8 +221,7 @@ def evaluate_classification_network(model,
     if output_dict == True:
         return results_dict
 
-
-### Plot History
+### PLOT HISTORY
 
 def plot_history(history,figsize=(6,8)):
     # Get a unique list of metrics 
@@ -175,8 +250,7 @@ def plot_history(history,figsize=(6,8)):
     fig.tight_layout()
     plt.show()
 
-
-### Convert y to Sklearn Classes
+### CONVERT Y TO SKLEARN CLASSES
 
 def convert_y_to_sklearn_classes(y, verbose=False):
     # If already one-dimension
@@ -195,6 +269,7 @@ def convert_y_to_sklearn_classes(y, verbose=False):
         if verbose:
             print("y is 2D with 1 column. Using round for metrics.")
         return np.round(y).flatten().astype(int)
+
 
 
 ### GET TRUE PRED LABELS
@@ -220,32 +295,50 @@ def get_true_pred_labels(model,ds):
     
     return y_true, y_pred_probs
 
-## Build LSTM MODEL
 
-# Define a function for building an LSTM model
-from tensorflow.keras.models import Sequential
-from tensorflow.keras import layers, optimizers, regularizers
-def build_lstm_model(text_vectorization_layer):
+### MAKE TEXT VECTORIZATION LAYER
+
+def make_text_vectorization_layer(train_ds,  max_tokens=None, 
+                                  split='whitespace',
+                                  standardize="lower_and_strip_punctuation",
+                                  output_mode="int",
+                                  output_sequence_length=None,
+                                  ngrams=None, pad_to_max_tokens=False,
+                                  verbose=True,
+                                  **kwargs,
+                                 ):
+    # Build the text vectorization layer
+    text_vectorizer = tf.keras.layers.TextVectorization(
+        max_tokens=max_tokens,
+        standardize=standardize, 
+        output_mode=output_mode,
+        output_sequence_length=output_sequence_length,
+        **kwargs
+    )
+    # Get just the text from the training data
+    if isinstance(train_ds, (np.ndarray, list, tuple, pd.Series)):
+        ds_texts = train_ds
+    else:
+        try:
+            ds_texts = train_ds.map(lambda x, y: x )
+        except:
+            ds_texts = train_ds
+            
+    # Fit the layer on the training texts
+    text_vectorizer.adapt(ds_texts)
     
-    # Define sequential model with pre-trained vectorization layer and *new* embedding layer
-    lstm_model = Sequential([
-        text_vectorization_layer,
-        layers.Embedding(input_dim=VOCAB_SIZE,
-                                  output_dim=EMBED_DIM, 
-                                  input_length=SEQUENCE_LENGTH)
-        ])
-        
-    # Add *new* LSTM layer
-    lstm_model.add(layers.LSTM(128))
-    # Add output layer
-    lstm_model.add(layers.Dense(len(classes), activation='softmax'))
- 
-    # Compile the model
-    lstm_model.compile(optimizer=optimizers.legacy.Adam(learning_rate = .01), 
-                  loss='sparse_categorical_crossentropy', 
-                  metrics=['accuracy'])
     
-    lstm_model.summary()
-    return lstm_model
-
-
+    if verbose:
+        # Print the params
+        print( "\ntf.keras.layers.TextVectorization(" )
+        config = text_vectorizer.get_config()
+        pprint(config,indent=4)
+        print(")")
+               
+    # SAVING VOCAB FOR LATER
+    # Getting list of vocab 
+    vocab = text_vectorizer.get_vocabulary()
+    # Save dictionaries to look up words from ints 
+    int_to_str  = {idx:word for idx, word in enumerate(vocab)}
+    
+    return text_vectorizer, int_to_str
