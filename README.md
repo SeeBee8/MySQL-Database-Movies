@@ -38,6 +38,21 @@ https://www.w3schools.com/python/ref_func_zip.asp
 https://www.geeksforgeeks.org/change-font-size-in-matplotlib/
 https://www.educative.io/answers/how-to-remove-emoji-from-the-text-in-python
 
+---------------------------------------------------------------------------
+
+## Reviews App
+
+-  See how reviews will rate
+-  Look at model parameters
+-  Check out frequency distribution of words used in review
+-  See the Word Clouds for the analysis
+-  Look at how training and testing data perfom
+![Screenshot 2024-02-22 151332](https://github.com/SeeBee8/MySQL-Database-Movies/assets/141530991/e7525bde-ef8c-4e14-95e3-bdd029603c47)
+
+
+-------![Screenshot 2024-02-22 151400](https://github.com/SeeBee8/MySQL-Database-Movies/assets/141530991/599cd1f2-4230-4f20-9be5-e4353d1822da)
+----------------------------------------------------------------
+
 Information courtesy of
 IMDb
 (https://www.imdb.com).
