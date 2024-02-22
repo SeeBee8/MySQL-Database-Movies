@@ -2,16 +2,13 @@ import streamlit as st
 
 st.set_page_config()
 
-#st.image('images/Logobue_sqTBDM.svg')
 st.title("Ranking Movie Reviews")
-st.subheader("How will your movie rate?")
 
 st.write('Taking a look at movie reviews, this model takes a review and tells you how the movie will rate.  \n Find out if the movie rates highly or not.')
 
-
+st.subheader("How will your movie rate?")
 st.markdown(
-    '''**Select a page from the sidebar**'''
-)
+    '''**Select a page from the sidebar**''')
 
 
 
