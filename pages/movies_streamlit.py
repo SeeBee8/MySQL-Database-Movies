@@ -15,7 +15,7 @@ import json
 with open('config/filepaths.json') as f:
     FPATHS = json.load(f)
     
-st.title("Predicting Movie Review Ratings")
+st.title("Will Your Movie Make the Cut?")
 
 @st.cache_data
 def load_data(fpath):
@@ -63,7 +63,7 @@ encoder = load_encoder()
 
 
 # Get text to predict from the text input box
-X_to_pred = st.text_input("### Enter text to predict here:", 
+X_to_pred = st.text_input("### Enter movie review here:", 
                           value="I loved the movie and the action! Great storyline." )
 
 
@@ -77,7 +77,7 @@ def make_prediction(X_to_pred, clf_pipe=clf_pipe, lookup_dict= target_lookup):
     
     
 # Trigger prediction with a button
-if st.button("Get prediction."):
+if st.button("Rate Your Movie"):
     pred_class = make_prediction(X_to_pred)
     st.markdown(f"##### Predicted category:  {pred_class}") 
 else: 
@@ -108,7 +108,7 @@ show_train = col1.checkbox("Show training data.", value=True)
 show_test = col2.checkbox("Show test data.", value=True)
 show_model_params =col3.checkbox("Show model params.", value=False)
 
-if st.button("Show model evaluation."):
+if st.button("Show model evaluation"):
     if show_train == True:
         # Display training data results
         y_pred_train = clf_pipe.predict(X_train)

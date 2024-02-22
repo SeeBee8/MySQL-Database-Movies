@@ -2,6 +2,32 @@ import streamlit as st
 
 st.set_page_config()
 
-st.image('Images/money_tree.jpg')
-st.title("Predict Low and High Movie Reviews")
-st.subheader(
+#st.image('images/Logobue_sqTBDM.svg')
+st.title("Ranking Movie Reviews")
+st.subheader("How will your movie rate?")
+
+st.write('Taking a look at movie reviews, this model takes a review and tells you how the movie will rate.  \n Find out if the movie rates highly or not.')
+
+
+st.markdown(
+    '''**Select a page from the sidebar**'''
+)
+
+
+
+import streamlit.components.v1 as components 
+# Source: https://meta.stackoverflow.com/questions/392785/need-to-add-linkedin-and-github-badges-in-profile-page-of-stack-overflow
+# Source: https://docs.streamlit.io/library/api-reference/layout/st.container
+with st.container(border=True, height = 200):
+    st.markdown("***Brought to you By: Christina Brockway***")
+    st.markdown("**Contact Me!**")
+    links_html = """<ul>
+    <li><a href="csbrockway602@gmail.com">Email</a></li>
+      <li><a href="https://www.linkedin.com/in/christina-brockway/[removed]" rel="nofollow noreferrer">
+        <img src="https://i.stack.imgur.com/gVE0j.png" alt="linkedin"> LinkedIn
+      </a> </li>
+      <li><a href="https://github.com/dashboard" rel="nofollow noreferrer">
+        <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github
+      </a></li>
+    </ul>"""
+    components.html(links_html)
