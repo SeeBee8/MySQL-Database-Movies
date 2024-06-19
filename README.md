@@ -40,9 +40,10 @@ https://www.educative.io/answers/how-to-remove-emoji-from-the-text-in-python
 
 ---------------------------------------------------------------------------
 
-## Reviews App
+## Movies Reviews App
+This app was created through Streamlit to show: 
 
--  See how reviews will rate
+-  How reviews will rate
 -  Look at model parameters
 -  Check out frequency distribution of words used in review
 -  See the Word Clouds for the analysis
